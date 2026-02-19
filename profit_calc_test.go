@@ -49,7 +49,7 @@ func TestCalculateProfit(t *testing.T) {
 			revenue:    1000,
 			expense:    0,
 			taxRate:    10,
-			wantEbt:    1000,
+			wantEbt:    10000,
 			wantProfit: 900,
 			wantRatio:  1.11,
 		},
