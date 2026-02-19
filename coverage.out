@@ -1,0 +1,13 @@
+mode: set
+example.com/first-app/profit_calc/profit_calc.go:22.13,25.16 2 0
+example.com/first-app/profit_calc/profit_calc.go:25.16,28.3 2 0
+example.com/first-app/profit_calc/profit_calc.go:30.2,31.16 2 0
+example.com/first-app/profit_calc/profit_calc.go:31.16,34.3 2 0
+example.com/first-app/profit_calc/profit_calc.go:36.2,37.16 2 0
+example.com/first-app/profit_calc/profit_calc.go:37.16,40.3 2 0
+example.com/first-app/profit_calc/profit_calc.go:42.2,48.31 5 0
+example.com/first-app/profit_calc/profit_calc.go:59.50,62.2 2 1
+example.com/first-app/profit_calc/profit_calc.go:73.71,78.20 4 1
+example.com/first-app/profit_calc/profit_calc.go:78.20,80.3 1 1
+example.com/first-app/profit_calc/profit_calc.go:82.2,82.23 1 1
+example.com/first-app/profit_calc/profit_calc.go:109.86,115.2 4 1

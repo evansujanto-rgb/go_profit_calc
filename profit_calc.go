@@ -7,6 +7,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"io"
 	"os"
 )
 
@@ -20,19 +21,19 @@ const dataFile = "profit_data.txt"
 // 4. Displays results to the user
 func main() {
 	//revenue, expense, tax_rate := inputData()
-	revenue, err := getUserInput("Please enter Revenue: ")
+	revenue, err := getUserInput("Please enter Revenue: ", os.Stdin)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	expense, err := getUserInput("Please enter Expense: ")
+	expense, err := getUserInput("Please enter Expense: ", os.Stdin)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	taxRate, err := getUserInput("Please enter Tax Rate: ")
+	taxRate, err := getUserInput("Please enter Tax Rate: ", os.Stdin)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -69,10 +70,10 @@ func writeDataToFile(ebt, profit, ratio float64) {
 // Returns:
 //   - float64: The validated user input
 //   - error: An error if the input is invalid (negative or zero)
-func getUserInput(userText string) (float64, error) {
+func getUserInput(userText string, reader io.Reader) (float64, error) {
 	var userInput float64
 	fmt.Print(userText)
-	fmt.Scan(&userInput)
+	fmt.Fscan(reader, &userInput)
 
 	if userInput <= 0 {
 		return 0, errors.New("input can't be negative")

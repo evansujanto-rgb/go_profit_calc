@@ -2,6 +2,7 @@ package main
 
 import (
 	"os"
+	"strings"
 	"testing"
 )
 
@@ -74,61 +75,98 @@ func TestCalculateProfit(t *testing.T) {
 
 // TestWriteDataToFile tests the writeDataToFile function
 func TestWriteDataToFile(t *testing.T) {
-	// Test data
-	testEbt := 1000.0
-	testProfit := 900.0
-	testRatio := 1.11
-
-	// Write test data
-	writeDataToFile(testEbt, testProfit, testRatio)
-
-	// Read the file back
-	data, err := os.ReadFile(dataFile)
-	if err != nil {
-		t.Fatalf("Failed to read test file: %v", err)
+	tests := []struct {
+		name     string
+		ebt      float64
+		profit   float64
+		ratio    float64
+		expected string
+	}{
+		{
+			name:     "Basic values",
+			ebt:      1000.0,
+			profit:   900.0,
+			ratio:    1.11,
+			expected: "EBT: 1000.0\nProfit: 900.0\nRatio: 1.11",
+		},
+		{
+			name:     "Zero values",
+			ebt:      0.0,
+			profit:   0.0,
+			ratio:    0.0,
+			expected: "EBT: 0.0\nProfit: 0.0\nRatio: 0.00",
+		},
+		{
+			name:     "Large numbers",
+			ebt:      1000000.0,
+			profit:   750000.0,
+			ratio:    1.33,
+			expected: "EBT: 1000000.0\nProfit: 750000.0\nRatio: 1.33",
+		},
+		{
+			name:     "Negative profit (loss scenario)",
+			ebt:      -500.0,
+			profit:   -450.0,
+			ratio:    1.11,
+			expected: "EBT: -500.0\nProfit: -450.0\nRatio: 1.11",
+		},
 	}
 
-	// Expected content
-	expected := "EBT: 1000.0\nProfit: 900.0\nRatio: 1.11"
-	if string(data) != expected {
-		t.Errorf("writeDataToFile() wrote %v, want %v", string(data), expected)
-	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			writeDataToFile(tt.ebt, tt.profit, tt.ratio)
 
-	// Clean up
-	os.Remove(dataFile)
+			data, err := os.ReadFile(dataFile)
+			if err != nil {
+				t.Fatalf("Failed to read test file: %v", err)
+			}
+
+			if string(data) != tt.expected {
+				t.Errorf("writeDataToFile() wrote %q, want %q", string(data), tt.expected)
+			}
+
+			os.Remove(dataFile)
+		})
+	}
 }
 
 // TestGetUserInput tests the getUserInput function with mock input
 func TestGetUserInput(t *testing.T) {
-	// This test would require mocking stdin, which is more complex
-	// For now, we'll test the error case for negative input
-	// In a real application, you might want to use a more sophisticated
-	// approach to test user input, such as using a custom io.Reader
-
 	tests := []struct {
 		name      string
 		input     string
+		wantValue float64
 		wantError bool
 	}{
 		{
+			name:      "Valid positive input",
+			input:     "100\n",
+			wantValue: 100,
+			wantError: false,
+		},
+		{
 			name:      "Negative input",
-			input:     "-100",
+			input:     "-100\n",
+			wantValue: 0,
 			wantError: true,
 		},
 		{
 			name:      "Zero input",
-			input:     "0",
+			input:     "0\n",
+			wantValue: 0,
 			wantError: true,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			// Note: This is a simplified test that doesn't actually test user input
-			// In a real application, you would need to mock stdin
-			_, err := getUserInput("test")
+			reader := strings.NewReader(tt.input)
+			got, err := getUserInput("test", reader)
 			if (err != nil) != tt.wantError {
 				t.Errorf("getUserInput() error = %v, wantError %v", err, tt.wantError)
+			}
+			if !tt.wantError && got != tt.wantValue {
+				t.Errorf("getUserInput() = %v, want %v", got, tt.wantValue)
 			}
 		})
 	}
