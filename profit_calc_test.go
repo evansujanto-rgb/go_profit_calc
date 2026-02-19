@@ -53,6 +53,33 @@ func TestCalculateProfit(t *testing.T) {
 			wantProfit: 900,
 			wantRatio:  1.11,
 		},
+		{
+			name:       "Loss scenario (expense greater than revenue)",
+			revenue:    500,
+			expense:    800,
+			taxRate:    10,
+			wantEbt:    -300,
+			wantProfit: -270,
+			wantRatio:  1.11,
+		},
+		{
+			name:       "Fractional tax rate",
+			revenue:    2000,
+			expense:    500,
+			taxRate:    15.5,
+			wantEbt:    1500,
+			wantProfit: 1267.5,
+			wantRatio:  1.18,
+		},
+		{
+			name:       "Small numbers",
+			revenue:    10,
+			expense:    3,
+			taxRate:    20,
+			wantEbt:    7,
+			wantProfit: 5.6,
+			wantRatio:  1.25,
+		},
 	}
 
 	for _, tt := range tests {
